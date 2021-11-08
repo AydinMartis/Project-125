@@ -1,0 +1,63 @@
+noseX=0;
+noseY=0;
+
+difference=0;
+rightWristX=0;
+leftWristX=0;
+
+
+
+function setup ()
+{
+    video=createCapture(VIDEO);
+    video.size(550,500);
+
+    canvas=createCanvas(550,550);
+    canvas.position(560,150);
+
+    posenet=ml5.poseNet(video,modelloaded);
+
+    posenet.on('pose',gotposes);
+}
+
+function modelloaded ()
+{
+    console.log('posenet is initialised!');
+}
+
+function gotposes (results)
+ {
+     if(results.length>0)
+     {
+         console.log(results);
+
+         noseX=results[0].pose.nose.x;
+         noseY=results[0].pose.nose.y;
+
+         console.log("noseX = "+noseX+",noseY = "+noseY);
+         leftWristX=results[0].pose.leftWrist.x;
+
+         rightWristX=results[0].pose.rightWrist.x;
+         
+
+         console.log("rightWristX = "+rightWristX+",leftWristX =  "+leftWristX+",difference = "+difference);
+
+         difference=floor(leftWristX-rightWristX);
+
+         document.getElementById("square_side").innerHTML="Width and height of the square will be = "+difference+"px";
+
+
+
+
+     }
+
+}
+
+function draw ()
+{
+    background('blue');
+    fill('pink');
+    stroke('pink')
+    square(noseX,noseY,difference);
+   
+}
